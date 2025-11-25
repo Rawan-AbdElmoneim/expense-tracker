@@ -1754,6 +1754,7 @@ function generateCSVData() {
   };
 }
 
+
 function calculateKPIs(expenseData, incomeData) {
   let largestExpense = { category: 'N/A', percentage: 0 };
   let smallestExpense = { category: 'N/A', percentage: 100 };
@@ -2003,6 +2004,54 @@ function getFormattedDate() {
   const day = String(now.getDate()).padStart(2, '0');
   return `${year}${month}${day}`;
 }
+
+
+
+//export table data as CSV
+function exportTableToCSV() {
+  const table = document.querySelector('.table');
+
+  const rows = table.querySelectorAll('tr');
+  let csvContent = '';
+
+  //get table headers
+  //skip the last column Delete
+  const headers = [];
+  const headerCells = rows[0].querySelectorAll('th');
+  for (let i = 0; i < headerCells.length - 1; i++) {
+    headers.push(headerCells[i].textContent.trim());
+  }
+  csvContent += headers.join(',') + '\n';
+
+  //start from 1 to skip header row
+  for (let i = 1; i < rows.length; i++) {
+    const cells = rows[i].querySelectorAll('td, th');
+    const rowData = [];
+
+    for (let j = 0; j < cells.length - 1; j++) {
+      let cellText = cells[j].textContent.trim();
+      //handle commas in data by wrapping in quotes
+      if (cellText.includes(',')) {
+        cellText = `"${cellText}"`;
+      }
+      rowData.push(cellText);
+    }
+    csvContent += rowData.join(',') + '\n';
+  }
+
+  downloadCSV(csvContent, `transactions_${getFormattedDate()}.csv`);
+}
+
+
+
+//for the export button
+document.addEventListener('DOMContentLoaded', function () {
+
+  const exportTableBtn = document.getElementById('export-table-csv');
+  if (exportTableBtn) {
+    exportTableBtn.addEventListener('click', exportTableToCSV);
+  }
+});
 
 
 
@@ -2355,7 +2404,7 @@ document.getElementById('logout').addEventListener('click', function () {
 
     alert.removeEventListener('click', handleOverlay);
   }
- //clicking exactly on the dark background do the same as clicking "No" button
+  //clicking exactly on the dark background do the same as clicking "No" button
   function handleOverlay(e) {
     if (e.target === alert) {
       handleNo();
@@ -2367,6 +2416,20 @@ document.getElementById('logout').addEventListener('click', function () {
   noButton.addEventListener('click', handleNo);
   alert.addEventListener('click', handleOverlay);
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
