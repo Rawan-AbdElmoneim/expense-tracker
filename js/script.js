@@ -2336,7 +2336,6 @@ document.getElementById('logout').addEventListener('click', function () {
   // yes button
   function handleYes() {
     document.body.classList.remove("no-scroll");
-    localStorage.removeItem("userData");
     window.location.href = 'index.html';
   }
   //no button
@@ -2356,7 +2355,7 @@ document.getElementById('logout').addEventListener('click', function () {
 
     alert.removeEventListener('click', handleOverlay);
   }
-
+ //clicking exactly on the dark background do the same as clicking "No" button
   function handleOverlay(e) {
     if (e.target === alert) {
       handleNo();
